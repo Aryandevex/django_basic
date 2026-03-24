@@ -8,6 +8,7 @@ from django.urls import path
 from .views import (
     MemberListView, MemberCreateView, MemberUpdateView, MemberDeleteView,
     TaskListView, TaskCreateView, TaskUpdateView, TaskDeleteView,
+    ProjectListView, ProjectCreateView, ProjectUpdateView, ProjectDeleteView,
     MemberLoginView, MemberLogoutView, DashboardView, IndexView,
     AdminDashboardView,
 )
@@ -33,4 +34,10 @@ urlpatterns = [
     path('tasks/create/',          TaskCreateView.as_view(), name='task-create'),
     path('tasks/<int:pk>/edit/',   TaskUpdateView.as_view(), name='task-edit'),
     path('tasks/<int:pk>/delete/', TaskDeleteView.as_view(), name='task-delete'),
+
+    # ── Project CRUD (templates) ──────────────────────────────
+    path('projects/',                 ProjectListView.as_view(),   name='project-list'),
+    path('projects/create/',          ProjectCreateView.as_view(), name='project-create'),
+    path('projects/<int:pk>/edit/',   ProjectUpdateView.as_view(), name='project-edit'),
+    path('projects/<int:pk>/delete/', ProjectDeleteView.as_view(), name='project-delete'),
 ]

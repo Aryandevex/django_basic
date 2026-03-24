@@ -237,3 +237,49 @@ class TaskDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
         ctx = super().get_context_data(**kwargs)
         ctx['title'] = 'Delete Task'
         return ctx
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  Project CRUD – Template Views
+# ═══════════════════════════════════════════════════════════════════════════
+
+class ProjectListView(LoginRequiredMixin, AdminRequiredMixin, ListView):
+    model = Project
+    template_name = 'coreapp/project_list.html'
+    context_object_name = 'projects'
+    queryset = Project.objects.all()
+
+
+class ProjectCreateView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = 'coreapp/project_form.html'
+    success_url = reverse_lazy('project-list')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['title'] = 'Add Project'
+        return ctx
+
+
+class ProjectUpdateView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = 'coreapp/project_form.html'
+    success_url = reverse_lazy('project-list')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['title'] = 'Edit Project'
+        return ctx
+
+
+class ProjectDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
+    model = Project
+    template_name = 'coreapp/project_confirm_delete.html'
+    success_url = reverse_lazy('project-list')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['title'] = 'Delete Project'
+        return ctx

@@ -134,8 +134,8 @@
     <a href="{% url 'member-create' %}"><span class="ico">➕</span> Add Member</a>
     <a href="{% url 'task-list' %}"><span class="ico">📋</span> Tasks</a>
     <a href="{% url 'task-create' %}"><span class="ico">➕</span> Add Task</a>
-    <a href="/admin/coreapp/project/"><span class="ico">🗂</span> Projects</a>
-    <a href="/api/" target="_blank"><span class="ico">🔌</span> API</a>
+    <a href="{% url 'project-list' %}"><span class="ico">🗂</span> Projects</a>
+    <a href="{% url 'project-create' %}"><span class="ico">➕</span> Add Project</a>
   </nav>
   <div class="bottom">
     <a href="{% url 'member-logout' %}">⏻ Sign Out</a>
@@ -176,13 +176,13 @@
       </div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="quick-actions">
       <a href="{% url 'member-create' %}" class="btn btn-primary">+ Add Member</a>
       <a href="{% url 'task-create' %}"   class="btn btn-success">+ Add Task</a>
-      <a href="/admin/coreapp/project/add/" class="btn btn-warning">+ Add Project</a>
+      <a href="{% url 'project-create' %}" class="btn btn-warning">+ Add Project</a>
       <a href="{% url 'member-list' %}"   class="btn btn-secondary">Manage Members</a>
       <a href="{% url 'task-list' %}"     class="btn btn-secondary">Manage Tasks</a>
+      <a href="{% url 'project-list' %}"  class="btn btn-secondary">Manage Projects</a>
     </div>
 
     <div class="grid2">
@@ -257,12 +257,12 @@
     <div class="card">
       <div class="card-header">
         <h3>🗂 Projects</h3>
-        <a href="/admin/coreapp/project/add/" class="btn btn-primary btn-sm">+ Add Project</a>
+        <a href="{% url 'project-create' %}" class="btn btn-primary btn-sm">+ Add Project</a>
       </div>
       {% if projects %}
       <table>
         <thead>
-          <tr><th>#</th><th>Name</th><th>Description</th><th>Members</th><th>Created</th></tr>
+          <tr><th>#</th><th>Name</th><th>Description</th><th>Members</th><th>Created</th><th>Actions</th></tr>
         </thead>
         <tbody>
           {% for p in projects %}
@@ -272,6 +272,10 @@
             <td>{{ p.description|default:"—"|truncatechars:50 }}</td>
             <td>{{ p.members.count }}</td>
             <td>{{ p.created_at|date:"d M Y" }}</td>
+            <td>
+              <a href="{% url 'project-edit' p.pk %}" class="btn btn-warning btn-sm">Edit</a>
+              <a href="{% url 'project-delete' p.pk %}" class="btn btn-danger btn-sm">Del</a>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
