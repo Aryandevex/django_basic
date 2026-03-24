@@ -1,11 +1,12 @@
 """
 coreapp/forms.py
 -----------------
-Django forms for admin-facing Member and Task CRUD views.
+Django forms for admin-facing CRUD views.
 
 MemberCreateForm  – creates a new User + Member
 MemberUpdateForm  – updates existing User credentials and Member fields
 TaskForm          – create/update a Task
+ProjectForm       – create/update a Project
 """
 from django import forms
 from django.contrib.auth.models import User
@@ -110,4 +111,18 @@ class TaskForm(forms.ModelForm):
             'project':     forms.Select(attrs={'class': 'form-control'}),
             'status':      forms.Select(attrs={'class': 'form-control'}),
             'due_date':    forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+
+
+# ── Project Form ─────────────────────────────────────────────────────────────
+
+class ProjectForm(forms.ModelForm):
+    """Standard ModelForm for creating and updating Projects."""
+
+    class Meta:
+        model  = Project
+        fields = ['name', 'description']
+        widgets = {
+            'name':        forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }

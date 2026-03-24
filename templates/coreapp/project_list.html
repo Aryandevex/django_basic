@@ -1,0 +1,45 @@
+{% extends "coreapp/base.html" %}
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>🗂 Projects</h1>
+  <a href="{% url 'project-create' %}" class="btn btn-primary">+ Add Project</a>
+</div>
+
+<div class="card">
+  {% if projects %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Members</th>
+        <th>Tasks</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in projects %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td><strong>{{ p.name }}</strong></td>
+        <td>{{ p.description|default:"—"|truncatechars:50 }}</td>
+        <td>{{ p.members.count }}</td>
+        <td>{{ p.tasks.count }}</td>
+        <td>{{ p.created_at|date:"d M Y" }}</td>
+        <td>
+          <a href="{% url 'project-edit' p.pk %}" class="btn btn-warning">Edit</a>
+          <a href="{% url 'project-delete' p.pk %}" class="btn btn-danger">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p style="color:#868e96; text-align:center; padding:2rem;">No projects found. <a href="{% url 'project-create' %}">Create one</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

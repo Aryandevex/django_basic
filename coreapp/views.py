@@ -1,20 +1,12 @@
 """
 coreapp/views.py
 -----------------
-Views for the PMS system:
+Template-based views for the PMS system:
 
-1. Auth Views (template-based)
-   - MemberLoginView   – login form for Members (TL / Employee / PC)
-   - MemberLogoutView  – logs out and redirects to login
-   - DashboardView     – role-aware dashboard after login
-
-2. API ViewSets (DRF) – admin-only REST API
-   - ProjectViewSet
-   - MemberViewSet
-
-3. Template-Based CBVs – admin-only CRUD via Django templates
-   - Member: List, Create, Update, Delete
-   - Task:   List, Create, Update, Delete
+1. Auth Views  – Login / Logout / Dashboard
+2. Admin Views – AdminDashboardView (superuser only)
+3. Member CRUD – List, Create, Update, Delete
+4. Task CRUD   – List, Create, Update, Delete
 """
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
@@ -23,14 +15,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
-# DRF
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser
-
 from .models import Project, Member, Task
-from .serializers import ProjectSerializer, MemberSerializer
 from .mixins import AdminRequiredMixin
-from .forms import MemberCreateForm, MemberUpdateForm, TaskForm
+from .forms import MemberCreateForm, MemberUpdateForm, TaskForm, ProjectForm
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -150,22 +137,6 @@ class AdminDashboardView(LoginRequiredMixin, View):
             'projects':       Project.objects.all(),
         }
         return render(request, 'coreapp/admin_dashboard.html', context)
-
-
-# ═══════════════════════════════════════════════════════════════════════════
-#  DRF API ViewSets
-# ═══════════════════════════════════════════════════════════════════════════
-
-class ProjectViewSet(ModelViewSet):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-    permission_classes = [IsAdminUser]
-
-
-class MemberViewSet(ModelViewSet):
-    queryset = Member.objects.select_related('user', 'project').all()
-    serializer_class = MemberSerializer
-    permission_classes = [IsAdminUser]
 
 
 # ═══════════════════════════════════════════════════════════════════════════
