@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMS – Project Management System</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0f1124;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Navbar ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .brand { font-size: 1.15rem; font-weight: 700; color: #fff; letter-spacing: .5px; }
+    .brand span { color: #4361ee; }
+    .nav-btn {
+      background: #4361ee;
+      color: #fff;
+      padding: .5rem 1.4rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 600;
+      transition: background .2s;
+    }
+    .nav-btn:hover { background: #3347cc; }
+
+    /* ── Hero ── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .badge-tag {
+      display: inline-block;
+      background: rgba(67,97,238,.18);
+      color: #7c9ef8;
+      border: 1px solid rgba(67,97,238,.35);
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .3rem 1rem;
+      letter-spacing: .5px;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      max-width: 640px;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, #fff 40%, #7c9ef8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: #8b9cb6;
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-actions { display: flex; gap: 1rem; }
+    .btn-main {
+      background: #4361ee;
+      color: #fff;
+      padding: .8rem 2.2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: background .2s, transform .15s;
+      box-shadow: 0 4px 20px rgba(67,97,238,.4);
+    }
+    .btn-main:hover { background: #3347cc; transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      color: #adb5bd;
+      padding: .8rem 1.8rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 600;
+      border: 1.5px solid rgba(255,255,255,.15);
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,.4); color: #fff; }
+
+    /* ── Features row ── */
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2.5rem 3rem 3.5rem;
+      flex-wrap: wrap;
+    }
+    .feature-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px;
+      padding: 1.4rem 1.6rem;
+      max-width: 220px;
+      text-align: center;
+      transition: background .2s;
+    }
+    .feature-card:hover { background: rgba(255,255,255,.07); }
+    .feature-card .icon { font-size: 1.8rem; margin-bottom: .7rem; }
+    .feature-card h4 { font-size: .95rem; font-weight: 700; margin-bottom: .4rem; }
+    .feature-card p  { font-size: .8rem; color: #7a8fa6; line-height: 1.5; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: .78rem;
+      color: #3a4a60;
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">⚙ <span>PMS</span> Portal</div>
+  <a href="{% url 'member-login' %}" class="nav-btn">Login →</a>
+</nav>
+
+<div class="hero">
+  <span class="badge-tag">Project Management System</span>
+  <h1>Manage Projects & Teams Efficiently</h1>
+  <p>A centralized platform for admins, team leads, and employees to track projects, assign tasks, and stay in sync.</p>
+  <div class="hero-actions">
+    <a href="{% url 'member-login' %}" class="btn-main">Get Started</a>
+    <a href="/admin/" class="btn-outline">Admin Panel</a>
+  </div>
+</div>
+
+<div class="features">
+  <div class="feature-card">
+    <div class="icon">🗂</div>
+    <h4>Project Tracking</h4>
+    <p>Create and manage projects with full admin control.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon">👥</div>
+    <h4>Team Management</h4>
+    <p>Manage members with role-based access: TL, Employee, Coordinator.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon">✅</div>
+    <h4>Task Assignment</h4>
+    <p>Assign tasks to members and track their status in real time.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon">🔐</div>
+    <h4>Secure Access</h4>
+    <p>Role-based dashboards ensure each user sees only what they need.</p>
+  </div>
+</div>
+
+<footer>© 2026 PMS Portal. All rights reserved.</footer>
+
+</body>
+</html>

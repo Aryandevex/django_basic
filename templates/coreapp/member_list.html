@@ -1,0 +1,53 @@
+{% extends "coreapp/base.html" %}
+{% block title %}Members{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>👥 Members</h1>
+  <a href="{% url 'member-create' %}" class="btn btn-primary">+ Add Member</a>
+</div>
+
+<div class="card">
+  {% if members %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Project</th>
+        <th>Phone</th>
+        <th>Joined</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in members %}
+      <tr>
+        <td>{{ m.id }}</td>
+        <td><strong>{{ m.user.username }}</strong></td>
+        <td>
+          {% if m.role == 'TL' %}
+            <span class="badge badge-tl">Team Lead</span>
+          {% elif m.role == 'PC' %}
+            <span class="badge badge-pc">Project Coordinator</span>
+          {% else %}
+            <span class="badge badge-emp">Employee</span>
+          {% endif %}
+        </td>
+        <td>{{ m.project.name|default:"—" }}</td>
+        <td>{{ m.phone|default:"—" }}</td>
+        <td>{{ m.created_at|date:"d M Y" }}</td>
+        <td>
+          <a href="{% url 'member-edit' m.pk %}" class="btn btn-warning">Edit</a>
+          <a href="{% url 'member-delete' m.pk %}" class="btn btn-danger">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p style="color:#868e96; text-align:center; padding:2rem;">No members found. <a href="{% url 'member-create' %}">Create one</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

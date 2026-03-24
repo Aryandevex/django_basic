@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMS Admin – {% block title %}Dashboard{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #333; }
+
+    /* Navbar */
+    nav {
+      background: #1a1f36;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    }
+    nav .brand { color: #fff; font-size: 1.2rem; font-weight: 700; text-decoration: none; letter-spacing: .5px; }
+    nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    nav ul a { color: #adb5bd; text-decoration: none; font-size: .92rem; transition: color .2s; }
+    nav ul a:hover, nav ul a.active { color: #fff; }
+
+    /* Layout */
+    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
+
+    /* Page header */
+    .page-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .page-header h1 { font-size: 1.5rem; color: #1a1f36; }
+
+    /* Card */
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+      padding: 1.8rem;
+    }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th { background: #f7f8fc; color: #555; text-align: left; padding: .75rem 1rem; border-bottom: 2px solid #e3e6ef; font-weight: 600; }
+    td { padding: .7rem 1rem; border-bottom: 1px solid #eef0f5; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f7f8fc; }
+
+    /* Buttons */
+    .btn {
+      display: inline-block; padding: .45rem 1rem;
+      border-radius: 6px; border: none; cursor: pointer;
+      font-size: .85rem; font-weight: 600; text-decoration: none; transition: opacity .2s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-primary  { background: #4361ee; color: #fff; }
+    .btn-warning  { background: #f59f00; color: #fff; }
+    .btn-danger   { background: #f03e3e; color: #fff; }
+    .btn-secondary{ background: #868e96; color: #fff; }
+
+    /* Badge */
+    .badge { display: inline-block; padding: .2rem .55rem; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+    .badge-pending     { background:#fff3bf; color:#856404; }
+    .badge-in_progress { background:#d0ebff; color:#1971c2; }
+    .badge-completed   { background:#d3f9d8; color:#2f9e44; }
+    .badge-tl  { background:#e7f5ff; color:#1971c2; }
+    .badge-emp { background:#f3f0ff; color:#5f3dc4; }
+    .badge-pc  { background:#fff0f6; color:#a61e4d; }
+
+    /* Form */
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: .35rem; font-size: .9rem; color: #444; }
+    .form-control {
+      width: 100%; padding: .5rem .8rem;
+      border: 1.5px solid #dee2e6; border-radius: 6px;
+      font-size: .92rem; outline: none; transition: border-color .2s;
+    }
+    .form-control:focus { border-color: #4361ee; }
+    .form-actions { display: flex; gap: .8rem; margin-top: 1.5rem; }
+    .help-text { font-size: .78rem; color: #868e96; margin-top: .25rem; }
+    .error-msg { color: #f03e3e; font-size: .8rem; margin-top: .2rem; }
+
+    /* Alert */
+    .alert { padding: .8rem 1.2rem; border-radius: 7px; margin-bottom: 1rem; font-size: .9rem; }
+    .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffd98a; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="{% url 'member-list' %}">⚙ PMS Admin</a>
+  <ul>
+    <li><a href="{% url 'member-list' %}">Members</a></li>
+    <li><a href="{% url 'task-list' %}">Tasks</a></li>
+    <li><a href="/admin/">Django Admin</a></li>
+    <li><a href="/api/">API</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

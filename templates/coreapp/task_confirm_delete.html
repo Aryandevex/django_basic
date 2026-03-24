@@ -1,0 +1,22 @@
+{% extends "coreapp/base.html" %}
+{% block title %}Delete Task{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Delete Task</h1>
+</div>
+
+<div class="card" style="max-width:500px;">
+  <div class="alert alert-warning">
+    ⚠️ Are you sure you want to delete task <strong>"{{ object.title }}"</strong>?
+    This action cannot be undone.
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      <a href="{% url 'task-list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

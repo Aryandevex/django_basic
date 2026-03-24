@@ -1,0 +1,59 @@
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# ── Virtual Environment ───────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+
+# ── Django ────────────────────────────────────────────────────
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# ── Static files (collected) ──────────────────────────────────
+staticfiles/
+static_root/
+
+# ── Environment variables ─────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Distribution / Packaging ─────────────────────────────────
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+
+# ── Testing ───────────────────────────────────────────────────
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+
+# ── IDEs & Editors ────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# ── OS files ─────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Migrations (keep these tracked) ──────────────────────────
+# !*/migrations/*.py
+# !*/migrations/__init__.py

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard – PMS</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #333; display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 230px; flex-shrink: 0;
+      background: #1a1f36;
+      display: flex; flex-direction: column;
+      padding: 1.5rem 0;
+      position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 10;
+    }
+    .sidebar .brand {
+      color: #fff; font-size: 1.1rem; font-weight: 700;
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      letter-spacing: .3px;
+    }
+    .sidebar .brand span { color: #4361ee; }
+    .sidebar nav { margin-top: 1.2rem; flex: 1; }
+    .sidebar nav a {
+      display: flex; align-items: center; gap: .7rem;
+      color: #adb5bd; text-decoration: none;
+      padding: .7rem 1.5rem;
+      font-size: .9rem; font-weight: 500;
+      transition: background .15s, color .15s;
+      border-radius: 0;
+    }
+    .sidebar nav a:hover, .sidebar nav a.active {
+      background: rgba(67,97,238,.15);
+      color: #fff;
+    }
+    .sidebar nav a .ico { font-size: 1rem; width: 18px; text-align: center; }
+    .sidebar .bottom { padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,.08); }
+    .sidebar .bottom a {
+      color: #f03e3e; font-size: .85rem; font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* ── Main ── */
+    .main { margin-left: 230px; flex: 1; display: flex; flex-direction: column; }
+
+    /* Top bar */
+    .topbar {
+      background: #fff; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    .topbar h1 { font-size: 1.15rem; color: #1a1f36; font-weight: 700; }
+    .topbar .admin-tag {
+      background: #4361ee; color: #fff;
+      padding: .25rem .8rem; border-radius: 999px;
+      font-size: .75rem; font-weight: 700;
+    }
+
+    /* Content */
+    .content { padding: 1.8rem 2rem; flex: 1; }
+
+    /* Stats row */
+    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.8rem; }
+    .stat-card {
+      background: #fff; border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+    .stat-card .num { font-size: 2rem; font-weight: 800; color: #4361ee; }
+    .stat-card .lbl { font-size: .78rem; color: #868e96; margin-top: .2rem; text-transform: uppercase; letter-spacing: .5px; }
+    .stat-card .num.green  { color: #2f9e44; }
+    .stat-card .num.orange { color: #e67700; }
+
+    /* Quick actions */
+    .quick-actions { display: flex; gap: .8rem; margin-bottom: 1.8rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; padding: .5rem 1.2rem;
+      border-radius: 7px; font-size: .85rem; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer; transition: opacity .2s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-primary  { background: #4361ee; color: #fff; }
+    .btn-success  { background: #2f9e44; color: #fff; }
+    .btn-warning  { background: #f59f00; color: #fff; }
+    .btn-danger   { background: #f03e3e; color: #fff; }
+    .btn-secondary{ background: #868e96; color: #fff; }
+    .btn-sm { padding: .3rem .75rem; font-size: .78rem; }
+
+    /* Section card */
+    .card {
+      background: #fff; border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      padding: 1.3rem 1.5rem; margin-bottom: 1.5rem;
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem; padding-bottom: .6rem;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .card-header h3 { font-size: .97rem; color: #1a1f36; font-weight: 700; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    th { background: #f7f8fc; color: #555; text-align: left; padding: .6rem .9rem; font-weight: 600; border-bottom: 2px solid #e3e6ef; }
+    td { padding: .6rem .9rem; border-bottom: 1px solid #f0f2f5; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f9fafc; }
+
+    /* Badges */
+    .badge { display: inline-block; padding: .18rem .5rem; border-radius: 999px; font-size: .72rem; font-weight: 600; }
+    .badge-pending     { background:#fff3bf; color:#856404; }
+    .badge-in_progress { background:#d0ebff; color:#1971c2; }
+    .badge-completed   { background:#d3f9d8; color:#2f9e44; }
+    .badge-tl  { background:#e7f5ff; color:#1971c2; }
+    .badge-emp { background:#f3f0ff; color:#5f3dc4; }
+    .badge-pc  { background:#fff0f6; color:#a61e4d; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media(max-width:900px){ .grid2{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="brand">⚙ <span>PMS</span> Admin</div>
+  <nav>
+    <a href="{% url 'admin-dashboard' %}" class="active"><span class="ico">🏠</span> Dashboard</a>
+    <a href="{% url 'member-list' %}"><span class="ico">👥</span> Members</a>
+    <a href="{% url 'member-create' %}"><span class="ico">➕</span> Add Member</a>
+    <a href="{% url 'task-list' %}"><span class="ico">📋</span> Tasks</a>
+    <a href="{% url 'task-create' %}"><span class="ico">➕</span> Add Task</a>
+    <a href="/admin/coreapp/project/"><span class="ico">🗂</span> Projects</a>
+    <a href="/api/" target="_blank"><span class="ico">🔌</span> API</a>
+  </nav>
+  <div class="bottom">
+    <a href="{% url 'member-logout' %}">⏻ Sign Out</a>
+  </div>
+</aside>
+
+<!-- ── Main Content ── -->
+<div class="main">
+
+  <div class="topbar">
+    <h1>Admin Dashboard</h1>
+    <span class="admin-tag">Superuser</span>
+  </div>
+
+  <div class="content">
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num">{{ total_members }}</div>
+        <div class="lbl">Total Members</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">{{ total_projects }}</div>
+        <div class="lbl">Projects</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">{{ total_tasks }}</div>
+        <div class="lbl">Total Tasks</div>
+      </div>
+      <div class="stat-card">
+        <div class="num orange">{{ pending_tasks }}</div>
+        <div class="lbl">Pending Tasks</div>
+      </div>
+      <div class="stat-card">
+        <div class="num green">{{ done_tasks }}</div>
+        <div class="lbl">Completed</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <a href="{% url 'member-create' %}" class="btn btn-primary">+ Add Member</a>
+      <a href="{% url 'task-create' %}"   class="btn btn-success">+ Add Task</a>
+      <a href="/admin/coreapp/project/add/" class="btn btn-warning">+ Add Project</a>
+      <a href="{% url 'member-list' %}"   class="btn btn-secondary">Manage Members</a>
+      <a href="{% url 'task-list' %}"     class="btn btn-secondary">Manage Tasks</a>
+    </div>
+
+    <div class="grid2">
+
+      <!-- Recent Members -->
+      <div class="card">
+        <div class="card-header">
+          <h3>👥 Recent Members</h3>
+          <a href="{% url 'member-list' %}" class="btn btn-secondary btn-sm">View All</a>
+        </div>
+        {% if recent_members %}
+        <table>
+          <thead>
+            <tr><th>Username</th><th>Role</th><th>Project</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            {% for m in recent_members %}
+            <tr>
+              <td><strong>{{ m.user.username }}</strong></td>
+              <td>
+                {% if m.role == 'TL' %}<span class="badge badge-tl">TL</span>
+                {% elif m.role == 'PC' %}<span class="badge badge-pc">PC</span>
+                {% else %}<span class="badge badge-emp">Emp</span>{% endif %}
+              </td>
+              <td>{{ m.project.name|default:"—" }}</td>
+              <td>
+                <a href="{% url 'member-edit' m.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'member-delete' m.pk %}" class="btn btn-danger btn-sm">Del</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p style="color:#adb5bd;text-align:center;padding:1.5rem;font-size:.88rem;">No members yet. <a href="{% url 'member-create' %}">Create one</a>.</p>
+        {% endif %}
+      </div>
+
+      <!-- Recent Tasks -->
+      <div class="card">
+        <div class="card-header">
+          <h3>📋 Recent Tasks</h3>
+          <a href="{% url 'task-list' %}" class="btn btn-secondary btn-sm">View All</a>
+        </div>
+        {% if recent_tasks %}
+        <table>
+          <thead>
+            <tr><th>Title</th><th>Assigned</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            {% for t in recent_tasks %}
+            <tr>
+              <td>{{ t.title|truncatechars:22 }}</td>
+              <td>{{ t.assigned_to.user.username|default:"—" }}</td>
+              <td><span class="badge badge-{{ t.status }}">{{ t.get_status_display }}</span></td>
+              <td>
+                <a href="{% url 'task-edit' t.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'task-delete' t.pk %}" class="btn btn-danger btn-sm">Del</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p style="color:#adb5bd;text-align:center;padding:1.5rem;font-size:.88rem;">No tasks yet. <a href="{% url 'task-create' %}">Create one</a>.</p>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- Projects -->
+    <div class="card">
+      <div class="card-header">
+        <h3>🗂 Projects</h3>
+        <a href="/admin/coreapp/project/add/" class="btn btn-primary btn-sm">+ Add Project</a>
+      </div>
+      {% if projects %}
+      <table>
+        <thead>
+          <tr><th>#</th><th>Name</th><th>Description</th><th>Members</th><th>Created</th></tr>
+        </thead>
+        <tbody>
+          {% for p in projects %}
+          <tr>
+            <td>{{ p.id }}</td>
+            <td><strong>{{ p.name }}</strong></td>
+            <td>{{ p.description|default:"—"|truncatechars:50 }}</td>
+            <td>{{ p.members.count }}</td>
+            <td>{{ p.created_at|date:"d M Y" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p style="color:#adb5bd;text-align:center;padding:1.5rem;font-size:.88rem;">No projects yet.</p>
+      {% endif %}
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+</body>
+</html>

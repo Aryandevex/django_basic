@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMS – Login</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1f36 0%, #2d3561 60%, #1a1f36 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    .login-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.5rem 2.8rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+    .logo .icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 58px; height: 58px;
+      background: #4361ee;
+      border-radius: 14px;
+      font-size: 1.7rem;
+      margin-bottom: .6rem;
+    }
+    .logo h1 { font-size: 1.35rem; color: #1a1f36; font-weight: 700; }
+    .logo p  { font-size: .83rem; color: #868e96; margin-top: .2rem; }
+
+    .alert-error {
+      background: #fff5f5;
+      border: 1px solid #ffc9c9;
+      color: #c92a2a;
+      border-radius: 8px;
+      padding: .65rem 1rem;
+      font-size: .85rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label {
+      display: block;
+      font-size: .85rem; font-weight: 600; color: #444;
+      margin-bottom: .4rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: .6rem .9rem;
+      border: 1.5px solid #dee2e6;
+      border-radius: 8px;
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .form-group input:focus { border-color: #4361ee; }
+
+    .btn-login {
+      width: 100%;
+      padding: .7rem;
+      background: #4361ee;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: .5rem;
+      transition: background .2s;
+    }
+    .btn-login:hover { background: #3347cc; }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 1.3rem;
+      font-size: .78rem;
+      color: #adb5bd;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="logo">
+    <div class="icon">⚙</div>
+    <h1>PMS Portal</h1>
+    <p>Project Management System</p>
+  </div>
+
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="alert-error">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username"
+             value="{{ username|default:'' }}"
+             placeholder="Enter your username" autofocus required>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password"
+             placeholder="Enter your password" required>
+    </div>
+
+    <button type="submit" class="btn-login">Sign In →</button>
+  </form>
+
+  <p class="footer-note">Your credentials are provided by the admin.</p>
+</div>
+
+</body>
+</html>

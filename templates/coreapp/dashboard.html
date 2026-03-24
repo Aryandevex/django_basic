@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – {{ member.get_role_display }}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #333; }
+
+    /* Top bar */
+    header {
+      background: #1a1f36;
+      padding: 0 2rem;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    }
+    header .brand { color: #fff; font-size: 1.1rem; font-weight: 700; }
+    header .user-info { display: flex; align-items: center; gap: 1rem; }
+    header .user-info span { color: #adb5bd; font-size: .88rem; }
+    header .user-info a {
+      color: #f03e3e; font-size: .82rem; font-weight: 600;
+      text-decoration: none; background: rgba(240,62,62,.1);
+      padding: .3rem .8rem; border-radius: 6px; transition: background .2s;
+    }
+    header .user-info a:hover { background: rgba(240,62,62,.25); }
+
+    /* Role badge in header */
+    .role-chip {
+      display: inline-block; padding: .2rem .7rem;
+      border-radius: 999px; font-size: .75rem; font-weight: 700;
+    }
+    .chip-tl  { background:#d0ebff; color:#1971c2; }
+    .chip-emp { background:#f3f0ff; color:#5f3dc4; }
+    .chip-pc  { background:#fff0f6; color:#a61e4d; }
+
+    /* Layout */
+    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
+
+    /* Welcome banner */
+    .welcome-banner {
+      background: linear-gradient(120deg, #4361ee, #3a0ca3);
+      color: #fff; padding: 1.5rem 2rem;
+      border-radius: 12px; margin-bottom: 1.8rem;
+    }
+    .welcome-banner h2 { font-size: 1.4rem; margin-bottom: .3rem; }
+    .welcome-banner p  { font-size: .88rem; opacity: .85; }
+
+    /* Stats row */
+    .stats { display: flex; gap: 1rem; margin-bottom: 1.8rem; flex-wrap: wrap; }
+    .stat-card {
+      flex: 1; min-width: 150px;
+      background: #fff; border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      text-align: center;
+    }
+    .stat-card .num { font-size: 1.8rem; font-weight: 700; color: #4361ee; }
+    .stat-card .lbl { font-size: .8rem; color: #868e96; margin-top: .2rem; }
+
+    /* Card */
+    .card {
+      background: #fff; border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h3 { font-size: 1rem; color: #1a1f36; margin-bottom: 1rem; border-bottom: 1px solid #eef0f5; padding-bottom: .6rem; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th { background: #f7f8fc; color: #555; text-align: left; padding: .6rem .9rem; font-weight: 600; border-bottom: 2px solid #e3e6ef; }
+    td { padding: .6rem .9rem; border-bottom: 1px solid #f0f2f5; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f7f8fc; }
+
+    /* Badges */
+    .badge { display: inline-block; padding: .18rem .5rem; border-radius: 999px; font-size: .72rem; font-weight: 600; }
+    .badge-pending     { background:#fff3bf; color:#856404; }
+    .badge-in_progress { background:#d0ebff; color:#1971c2; }
+    .badge-completed   { background:#d3f9d8; color:#2f9e44; }
+
+    .empty-state { text-align: center; color: #adb5bd; padding: 2rem 1rem; font-size: .9rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="brand">⚙ PMS Portal</span>
+  <div class="user-info">
+    <span>
+      {{ member.user.username }}
+      {% if member.role == 'TL' %}
+        <span class="role-chip chip-tl">Team Lead</span>
+      {% elif member.role == 'PC' %}
+        <span class="role-chip chip-pc">Project Coordinator</span>
+      {% else %}
+        <span class="role-chip chip-emp">Employee</span>
+      {% endif %}
+    </span>
+    <a href="{% url 'member-logout' %}">Sign Out</a>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Welcome Banner -->
+  <div class="welcome-banner">
+    <h2>Welcome back, {{ member.user.username }} 👋</h2>
+    <p>
+      Role: {{ member.get_role_display }}
+      {% if member.project %} &nbsp;·&nbsp; Project: {{ member.project.name }}{% endif %}
+    </p>
+  </div>
+
+  <!-- ═══ TEAM LEAD DASHBOARD ═══ -->
+  {% if member.role == 'TL' %}
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num">{{ tasks.count }}</div>
+        <div class="lbl">Total Tasks</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">{{ team_members.count }}</div>
+        <div class="lbl">Team Members</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">{{ tasks|length }}</div>
+        <div class="lbl">Active Items</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Project Tasks</h3>
+      {% if tasks %}
+      <table>
+        <thead>
+          <tr><th>Title</th><th>Assigned To</th><th>Status</th><th>Due Date</th></tr>
+        </thead>
+        <tbody>
+          {% for t in tasks %}
+          <tr>
+            <td>{{ t.title }}</td>
+            <td>{{ t.assigned_to.user.username|default:"Unassigned" }}</td>
+            <td>
+              <span class="badge badge-{{ t.status }}">{{ t.get_status_display }}</span>
+            </td>
+            <td>{{ t.due_date|date:"d M Y"|default:"—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="empty-state">No tasks in this project yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>👥 Your Team Members</h3>
+      {% if team_members %}
+      <table>
+        <thead>
+          <tr><th>Username</th><th>Role</th><th>Phone</th></tr>
+        </thead>
+        <tbody>
+          {% for m in team_members %}
+          <tr>
+            <td>{{ m.user.username }}</td>
+            <td>{{ m.get_role_display }}</td>
+            <td>{{ m.phone|default:"—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="empty-state">No other members in this project.</p>
+      {% endif %}
+    </div>
+
+  <!-- ═══ PROJECT COORDINATOR DASHBOARD ═══ -->
+  {% elif member.role == 'PC' %}
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num">{{ projects.count }}</div>
+        <div class="lbl">Total Projects</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">{{ total_members }}</div>
+        <div class="lbl">Members in My Project</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">{{ tasks.count }}</div>
+        <div class="lbl">Tasks</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🗂 All Projects</h3>
+      {% if projects %}
+      <table>
+        <thead>
+          <tr><th>Project Name</th><th>Description</th><th>Created</th></tr>
+        </thead>
+        <tbody>
+          {% for p in projects %}
+          <tr>
+            <td><strong>{{ p.name }}</strong></td>
+            <td>{{ p.description|default:"—"|truncatechars:60 }}</td>
+            <td>{{ p.created_at|date:"d M Y" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="empty-state">No projects found.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>📋 Project Tasks</h3>
+      {% if tasks %}
+      <table>
+        <thead>
+          <tr><th>Title</th><th>Assigned To</th><th>Status</th><th>Due Date</th></tr>
+        </thead>
+        <tbody>
+          {% for t in tasks %}
+          <tr>
+            <td>{{ t.title }}</td>
+            <td>{{ t.assigned_to.user.username|default:"Unassigned" }}</td>
+            <td><span class="badge badge-{{ t.status }}">{{ t.get_status_display }}</span></td>
+            <td>{{ t.due_date|date:"d M Y"|default:"—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="empty-state">No tasks in your project yet.</p>
+      {% endif %}
+    </div>
+
+  <!-- ═══ EMPLOYEE DASHBOARD ═══ -->
+  {% else %}
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num">{{ tasks.count }}</div>
+        <div class="lbl">My Tasks</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">{% with tasks|length as total %}{{ total }}{% endwith %}</div>
+        <div class="lbl">Active Tasks</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 My Tasks</h3>
+      {% if tasks %}
+      <table>
+        <thead>
+          <tr><th>Title</th><th>Project</th><th>Status</th><th>Due Date</th></tr>
+        </thead>
+        <tbody>
+          {% for t in tasks %}
+          <tr>
+            <td>{{ t.title }}</td>
+            <td>{{ t.project.name|default:"—" }}</td>
+            <td><span class="badge badge-{{ t.status }}">{{ t.get_status_display }}</span></td>
+            <td>{{ t.due_date|date:"d M Y"|default:"—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="empty-state">No tasks assigned to you yet.</p>
+      {% endif %}
+    </div>
+
+  {% endif %}
+
+</div>
+</body>
+</html>

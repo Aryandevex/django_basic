@@ -1,0 +1,53 @@
+{% extends "coreapp/base.html" %}
+{% block title %}Tasks{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>📋 Tasks</h1>
+  <a href="{% url 'task-create' %}" class="btn btn-primary">+ Add Task</a>
+</div>
+
+<div class="card">
+  {% if tasks %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Assigned To</th>
+        <th>Project</th>
+        <th>Status</th>
+        <th>Due Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in tasks %}
+      <tr>
+        <td>{{ t.id }}</td>
+        <td><strong>{{ t.title }}</strong></td>
+        <td>{{ t.assigned_to.user.username|default:"—" }}</td>
+        <td>{{ t.project.name|default:"—" }}</td>
+        <td>
+          {% if t.status == 'pending' %}
+            <span class="badge badge-pending">Pending</span>
+          {% elif t.status == 'in_progress' %}
+            <span class="badge badge-in_progress">In Progress</span>
+          {% else %}
+            <span class="badge badge-completed">Completed</span>
+          {% endif %}
+        </td>
+        <td>{{ t.due_date|date:"d M Y"|default:"—" }}</td>
+        <td>
+          <a href="{% url 'task-edit' t.pk %}" class="btn btn-warning">Edit</a>
+          <a href="{% url 'task-delete' t.pk %}" class="btn btn-danger">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p style="color:#868e96; text-align:center; padding:2rem;">No tasks found. <a href="{% url 'task-create' %}">Create one</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}
